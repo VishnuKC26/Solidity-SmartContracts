@@ -26,7 +26,7 @@ contract FundMe {
 
     // the first person to deploy the contract is
     // the owner
-    constructor() public {
+    constructor() {
         owner = msg.sender;
     }
 
@@ -34,10 +34,10 @@ contract FundMe {
         // 18 digit number to be compared with donated amount
         uint256 minimumUSD = 50 * 10**18;
         //is the donated amount less than 50USD?
-        // require(
-        //     getConversionRate(msg.value) >= minimumUSD,
-        //     "You need to spend more ETH!"
-        // );
+        require(
+            getConversionRate(msg.value) >= minimumUSD,
+            "You need to spend more ETH!"
+        );
         //if not, add to mapping and funders array
         addressToAmountFunded[msg.sender] += msg.value;
         funders.push(msg.sender);
@@ -75,7 +75,7 @@ contract FundMe {
     //modifier: https://medium.com/coinmonks/solidity-tutorial-all-about-modifiers-a86cf81c14cb
     modifier onlyOwner() {
         //is the message sender owner of the contract?
-        require(msg.sender == owner);
+        require(msg.sender == owner,"Sender is not the owner!");
 
         _;
     }
@@ -85,9 +85,20 @@ contract FundMe {
     // if true, withdraw function will be executed
     function withdraw() public payable onlyOwner {
         
-    require(msg.sender == owner, "Only owner can withdraw!");
-    (bool success, ) = payable(msg.sender).call{value: address(this).balance}("");
-    require(success, "Withdrawal failed");
+        //transfer capped at 2300 gas and does not return incase of failure
+        // it automatically reverts in case of failure
+        // payable(msg.sender).transfer(address(this).balance);
+
+        // send also capped at 2300 gas but sends bool for fail or success
+        // bool sendSuccess = payable(msg.sender).send(address(this).balance);
+        // require(sendSuccess, "Send failed");
+
+        (bool callSuccess,) = payable(msg.sender).call{value: address(this).balance}("");
+        require(callSuccess, "Call failed");
+
+    // require(msg.sender == owner, "Only owner can withdraw!");
+    // (bool success, ) = payable(msg.sender).call{value: address(this).balance}("");
+    // require(success, "Withdrawal failed");
 
 
         //iterate through all the mappings and make them 0
