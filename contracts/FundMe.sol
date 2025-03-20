@@ -1,117 +1,87 @@
 // SPDX-License-Identifier: MIT
+pragma solidity ^0.8.18;
 
-// Smart contract that lets anyone deposit ETH into the contract
-// Only the owner of the contract can withdraw the ETH
-pragma solidity >=0.8.2 <0.9.0;
+// Note: The AggregatorV3Interface might be at a different location than what was in the video!
+import {AggregatorV3Interface} from "@chainlink/contracts/src/v0.8/shared/interfaces/AggregatorV3Interface.sol";
+import {PriceConverter} from "./PriceConverter.sol";
 
-// Get the latest ETH/USD price from chainlink price feed
-
-// IMPORTANT: This contract has been updated to use the Goerli testnet
-// Please see: https://docs.chain.link/docs/get-the-latest-price/
-// For more information
-
-import "@chainlink/contracts/src/v0.6/interfaces/AggregatorV3Interface.sol";
-
+error NotOwner();
 
 contract FundMe {
-    // safe math library check uint256 for integer overflows
-    
+    using PriceConverter for uint256;
 
-    //mapping to store which address depositeded how much ETH
     mapping(address => uint256) public addressToAmountFunded;
-    // array of addresses who deposited
     address[] public funders;
-    //address of the owner (who deployed the contract)
-    address public owner;
 
-    // the first person to deploy the contract is
-    // the owner
+    // Could we make this constant?  /* hint: no! We should make it immutable! */
+    address public /* immutable */ i_owner;
+    uint256 public constant MINIMUM_USD = 5 * 10 ** 18;
+
     constructor() {
-        owner = msg.sender;
+        i_owner = msg.sender;
     }
 
     function fund() public payable {
-        // 18 digit number to be compared with donated amount
-        uint256 minimumUSD = 50 * 10**18;
-        //is the donated amount less than 50USD?
-        require(
-            getConversionRate(msg.value) >= minimumUSD,
-            "You need to spend more ETH!"
-        );
-        //if not, add to mapping and funders array
+        require(msg.value.getConversionRate() >= MINIMUM_USD, "You need to spend more ETH!");
+        // require(PriceConverter.getConversionRate(msg.value) >= MINIMUM_USD, "You need to spend more ETH!");
         addressToAmountFunded[msg.sender] += msg.value;
         funders.push(msg.sender);
     }
 
-    //function to get the version of the chainlink pricefeed
     function getVersion() public view returns (uint256) {
-        AggregatorV3Interface priceFeed = AggregatorV3Interface(
-            0xD4a33860578De61DBAbDc8BFdb98FD742fA7028e
-        );
+        AggregatorV3Interface priceFeed = AggregatorV3Interface(0x694AA1769357215DE4FAC081bf1f309aDC325306);
         return priceFeed.version();
     }
 
-    function getPrice() public view returns (uint256) {
-        AggregatorV3Interface priceFeed = AggregatorV3Interface(
-            0xD4a33860578De61DBAbDc8BFdb98FD742fA7028e
-        );
-        (, int256 answer, , , ) = priceFeed.latestRoundData();
-        // ETH/USD rate in 18 digit
-        return uint256(answer * 10000000000);
-    }
-
-    // 1000000000
-    function getConversionRate(uint256 ethAmount)
-        public
-        view
-        returns (uint256)
-    {
-        uint256 ethPrice = getPrice();
-        uint256 ethAmountInUsd = (ethPrice * ethAmount) / 1000000000000000000;
-        // the actual ETH/USD conversation rate, after adjusting the extra 0s.
-        return ethAmountInUsd;
-    }
-
-    //modifier: https://medium.com/coinmonks/solidity-tutorial-all-about-modifiers-a86cf81c14cb
     modifier onlyOwner() {
-        //is the message sender owner of the contract?
-        require(msg.sender == owner,"Sender is not the owner!");
-
+        // require(msg.sender == owner);
+        if (msg.sender != i_owner) revert NotOwner();
         _;
     }
 
-    // onlyOwner modifer will first check the condition inside it
-    // and
-    // if true, withdraw function will be executed
-    function withdraw() public payable onlyOwner {
-        
-        //transfer capped at 2300 gas and does not return incase of failure
-        // it automatically reverts in case of failure
-        // payable(msg.sender).transfer(address(this).balance);
-
-        // send also capped at 2300 gas but sends bool for fail or success
-        // bool sendSuccess = payable(msg.sender).send(address(this).balance);
-        // require(sendSuccess, "Send failed");
-
-        (bool callSuccess,) = payable(msg.sender).call{value: address(this).balance}("");
-        require(callSuccess, "Call failed");
-
-    // require(msg.sender == owner, "Only owner can withdraw!");
-    // (bool success, ) = payable(msg.sender).call{value: address(this).balance}("");
-    // require(success, "Withdrawal failed");
-
-
-        //iterate through all the mappings and make them 0
-        //since all the deposited amount has been withdrawn
-        for (
-            uint256 funderIndex = 0;
-            funderIndex < funders.length;
-            funderIndex++
-        ) {
+    function withdraw() public onlyOwner {
+        for (uint256 funderIndex = 0; funderIndex < funders.length; funderIndex++) {
             address funder = funders[funderIndex];
             addressToAmountFunded[funder] = 0;
         }
-        //funders array will be initialized to 0
         funders = new address[](0);
+        // // transfer
+        // payable(msg.sender).transfer(address(this).balance);
+
+        // // send
+        // bool sendSuccess = payable(msg.sender).send(address(this).balance);
+        // require(sendSuccess, "Send failed");
+
+        // call
+        (bool callSuccess,) = payable(msg.sender).call{value: address(this).balance}("");
+        require(callSuccess, "Call failed");
+    }
+    // Explainer from: https://solidity-by-example.org/fallback/
+    // Ether is sent to contract
+    //      is msg.data empty?
+    //          /   \
+    //         yes  no
+    //         /     \
+    //    receive()?  fallback()
+    //     /   \
+    //   yes   no
+    //  /        \
+    //receive()  fallback()
+
+    fallback() external payable {
+        fund();
+    }
+
+    receive() external payable {
+        fund();
     }
 }
+
+// Concepts we didn't cover yet (will cover in later sections)
+// 1. Enum
+// 2. Events
+// 3. Try / Catch
+// 4. Function Selector
+// 5. abi.encode / decode
+// 6. Hash with keccak256
+// 7. Yul / Assembly

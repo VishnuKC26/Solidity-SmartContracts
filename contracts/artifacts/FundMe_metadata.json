@@ -11,6 +11,28 @@
 				"type": "constructor"
 			},
 			{
+				"inputs": [],
+				"name": "NotOwner",
+				"type": "error"
+			},
+			{
+				"stateMutability": "payable",
+				"type": "fallback"
+			},
+			{
+				"inputs": [],
+				"name": "MINIMUM_USD",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
 				"inputs": [
 					{
 						"internalType": "address",
@@ -56,38 +78,6 @@
 				"type": "function"
 			},
 			{
-				"inputs": [
-					{
-						"internalType": "uint256",
-						"name": "ethAmount",
-						"type": "uint256"
-					}
-				],
-				"name": "getConversionRate",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "getPrice",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
 				"inputs": [],
 				"name": "getVersion",
 				"outputs": [
@@ -102,7 +92,7 @@
 			},
 			{
 				"inputs": [],
-				"name": "owner",
+				"name": "i_owner",
 				"outputs": [
 					{
 						"internalType": "address",
@@ -117,8 +107,12 @@
 				"inputs": [],
 				"name": "withdraw",
 				"outputs": [],
-				"stateMutability": "payable",
+				"stateMutability": "nonpayable",
 				"type": "function"
+			},
+			{
+				"stateMutability": "payable",
+				"type": "receive"
 			}
 		],
 		"devdoc": {
@@ -148,20 +142,28 @@
 		"remappings": []
 	},
 	"sources": {
-		"@chainlink/contracts/src/v0.6/interfaces/AggregatorV3Interface.sol": {
-			"keccak256": "0x1862840d741dedb36e774534b877a13b5187555e3b78b8d2815f898b0dc02268",
+		"@chainlink/contracts/src/v0.8/shared/interfaces/AggregatorV3Interface.sol": {
+			"keccak256": "0x257a8d28fa83d3d942547c8e129ef465e4b5f3f31171e7be4739a4c98da6b4f0",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://64a15f4349aea6e60703f581a6280b71d6adb35ee74d2f3c4f130a2adc3efee3",
-				"dweb:/ipfs/QmdVoSQvGfJNPnjQsAs7ZN3ueWghzTa72jSqzhGiQNDpkL"
+				"bzz-raw://6d39e11b1dc7b9b8ccdabbc9be442ab7cda4a81c748f57e316dcb1bcb4a28bf9",
+				"dweb:/ipfs/QmaG6vz6W6iEUBsbHSBob5mdcitYxWjoygxREHpsJHfWrS"
 			]
 		},
 		"contracts/FundMe.sol": {
-			"keccak256": "0xa030171f2f778f98075dbb5717617a726e8109b00e872d2564498d5c50161887",
+			"keccak256": "0x9acf541d44387a3a309ab6799f09d0573cd324d943b58a5d4dd19d38ed0cdfad",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://d909e117300ec7810184e9965f8859b7d090ab72bbf84bdf9adace3cd7c335dd",
-				"dweb:/ipfs/QmU3hF8kmt3AQMswjNkdVrc7ZQQno4mMAesqs4s5yu2dJ1"
+				"bzz-raw://c7e46a42f278f7f4ee70d00957b4546c3a4159e2ba8a699d58785afb1b429276",
+				"dweb:/ipfs/QmcGHMawQRVpdsW6o2zrJrBftNqzmNP6jD9MQ4XwrRp4Nm"
+			]
+		},
+		"contracts/PriceConverter.sol": {
+			"keccak256": "0x12ccdc629fe5fcac0b323aa5eaff3460b3022ebc5aa97d32388ff8a172908d52",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://8375c719f721dedd84c3af6694a45046a3ebfa6066eb6b37819e3a1e2f6b1d5e",
+				"dweb:/ipfs/QmRenYVHUMdM9KF3c7cP54gkKsW3Bg5GbpweqG8R77i5cM"
 			]
 		}
 	},
