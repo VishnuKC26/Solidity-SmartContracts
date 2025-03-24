@@ -11,6 +11,19 @@
 				"type": "constructor"
 			},
 			{
+				"inputs": [
+					{
+						"internalType": "string",
+						"name": "_name",
+						"type": "string"
+					}
+				],
+				"name": "addCandidate",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
 				"inputs": [],
 				"name": "admin",
 				"outputs": [
@@ -21,6 +34,49 @@
 					}
 				],
 				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"name": "candidates",
+				"outputs": [
+					{
+						"internalType": "string",
+						"name": "name",
+						"type": "string"
+					},
+					{
+						"internalType": "uint256",
+						"name": "voteCount",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "string",
+						"name": "_name",
+						"type": "string"
+					}
+				],
+				"name": "sayHello",
+				"outputs": [
+					{
+						"internalType": "string",
+						"name": "",
+						"type": "string"
+					}
+				],
+				"stateMutability": "pure",
 				"type": "function"
 			}
 		],
@@ -52,11 +108,11 @@
 	},
 	"sources": {
 		"contracts/Voting.sol": {
-			"keccak256": "0x3dd36bca1961bfd3738218984f00a9dbf76d6e9e47d24b6fe855491b426eaca0",
+			"keccak256": "0x74b2c55461e781e886469deca3ed58ea7c929edc4d2078099ab1575e38f189f6",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://6e0746abc69b2c5681a38852f2d0c29504a21e5537bcc2de7ffecb6bf0a056c4",
-				"dweb:/ipfs/QmW38UbenzbQyu2ncxAnEmBcitCpAqViSZtGJ2XvgZPKbi"
+				"bzz-raw://1344d5d691cacfaa444ef9849bc7e7a171eac1b29d7efe1a3864087524c5c599",
+				"dweb:/ipfs/QmVXqoQC65imkKcdFTPDz9jyugNxsgVSNDLYESeMNdoApJ"
 			]
 		}
 	},
