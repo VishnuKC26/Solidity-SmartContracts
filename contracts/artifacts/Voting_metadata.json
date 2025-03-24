@@ -61,14 +61,8 @@
 				"type": "function"
 			},
 			{
-				"inputs": [
-					{
-						"internalType": "string",
-						"name": "_name",
-						"type": "string"
-					}
-				],
-				"name": "sayHello",
+				"inputs": [],
+				"name": "getWinner",
 				"outputs": [
 					{
 						"internalType": "string",
@@ -76,7 +70,39 @@
 						"type": "string"
 					}
 				],
-				"stateMutability": "pure",
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"name": "hasVoted",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "_candidateIndex",
+						"type": "uint256"
+					}
+				],
+				"name": "vote",
+				"outputs": [],
+				"stateMutability": "nonpayable",
 				"type": "function"
 			}
 		],
@@ -108,11 +134,11 @@
 	},
 	"sources": {
 		"contracts/Voting.sol": {
-			"keccak256": "0x74b2c55461e781e886469deca3ed58ea7c929edc4d2078099ab1575e38f189f6",
+			"keccak256": "0x14455e2e79a747c3f8cc567b7a8a22a91d94cdf2ef888d98598357d3c8f988c0",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://1344d5d691cacfaa444ef9849bc7e7a171eac1b29d7efe1a3864087524c5c599",
-				"dweb:/ipfs/QmVXqoQC65imkKcdFTPDz9jyugNxsgVSNDLYESeMNdoApJ"
+				"bzz-raw://5632c7841fcdef4d781d6cafddb04a022e5f9d7a15922e7b7370c613a06abe4f",
+				"dweb:/ipfs/QmNV4mQj7moLyfGkbMbm5uvRoGLuHcbrmedmgQu283Gpbw"
 			]
 		}
 	},
